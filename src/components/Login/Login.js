@@ -1,24 +1,67 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import auth from "../../firebase.init";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [signInWithEmailAndPassword, user, error, loading] = useSignInWithEmailAndPassword(auth);
+  const navigate = useNavigate();
+
+  const handleEmailBlur = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassBlur = (e) => {
+    setPassword(e.target.value);
+  };
+
+  if (user) {
+    navigate("/shop");
+  }
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(email, password);
+  };
+ 
+  
+
+
   return (
     <div className="form-container">
       <div>
         <h2 className="form-title">LogIn</h2>
-        <form>
+        <form onSubmit={handleSignIn}>
           <div className="input-group">
             <label>Email</label>
-            <input type="email" name="email"></input>
+            <input onBlur={handleEmailBlur} type="email" name="email"></input>
           </div>
           <div className="input-group">
             <label>Password</label>
-            <input type="password" name="password"></input>
+            <input
+              onBlur={handlePassBlur}
+              type="password"
+              name="password"
+            ></input>
           </div>
+          
+          <p style={{color: 'red'}}>{error.message}</p>
+          {
+            loading && <p>Loading...</p>
+          }
+       
           <input className="btn" type="submit" value="login"></input>
         </form>
-        <p>New to Ema-John? <Link className="form-link" to="/signup">Create an account</Link></p>
+        <p>
+          New to Ema-John?{" "}
+          <Link className="form-link" to="/signup">
+            Create an account
+          </Link>
+        </p>
       </div>
     </div>
   );
