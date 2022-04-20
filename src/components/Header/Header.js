@@ -21,7 +21,8 @@ const Header = () => {
                 <Link to="/inventory">Inventory</Link>
                 <Link to="/about">About</Link>
                 {
-                    user ?    
+                    user?.uid 
+                    ?    
                     <button onClick={handleSignOut} type="submit">Sign out</button>
                     :
                     <Link to="/login">login</Link>
